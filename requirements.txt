@@ -1,0 +1,3 @@
+djongo
+django
+pymongo
