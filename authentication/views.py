@@ -32,25 +32,80 @@ from pymongo import MongoClient
 def home(request):
     return render(request, "authentication/index.html")
 
-
 from django.http import HttpResponse
 import csv
-
 from datetime import datetime
-
-from django.http import HttpResponse
-import csv
 from django.conf import settings
 from pymongo import MongoClient
-from datetime import datetime
+
 mongo_uri = 'mongodb+srv://suryanshkgp:m3$JviM$d*X32cB@cluster0.lgvfa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+from django.http import JsonResponse
+
+from huggingface_hub import InferenceClient
+
+import numpy as np
+
+def chatbot_query(request):
+    # Parse parameters from request
+    node_id = request.GET.get("node_id")
+    query = request.GET.get("query")
+    
+    if not node_id or not query:
+        return JsonResponse({"error": "Missing node_id or query"}, status=400)
+
+    # Connect to MongoDB and retrieve data for the specified node_id
+    try:
+        node_id = int(node_id)
+    except ValueError:
+        return JsonResponse({"error": "Invalid node_id"}, status=400)
+
+    client = MongoClient(mongo_uri)
+    db = client['sensor_data']
+    collection = db['readings']
+    
+    # Fetch all data for the specified node_id
+    readings = list(collection.find({"node_id": node_id}))
+
+    data = [{
+        'timestamp': reading['timestamp'].isoformat(),
+        'battery_voltage': float(reading['battery_voltage']['$numberDouble']) if isinstance(reading['battery_voltage'], dict) else float(reading['battery_voltage']),
+        'solar': float(reading['solar']['$numberDouble']) if isinstance(reading['solar'], dict) else float(reading['solar']),
+        'pressure': float(reading['pressure']['$numberDouble']) if isinstance(reading['pressure'], dict) else float(reading['pressure']),
+    } for reading in readings]
+
+    client.close()
+    
+    # Sample 20 equally distributed data points
+    if len(data) > 20:
+        indices = np.linspace(0, len(data) - 1, 20, dtype=int)
+        data = [data[i] for i in indices]
+
+    # Prepare messages for LLM API
+    context_data = "\n".join([f"Timestamp: {d['timestamp']}, Battery Voltage: {d['battery_voltage']}, Solar: {d['solar']}, Pressure: {d['pressure']}" for d in data])
+    messages = [
+        {"role": "system", "content": "You are a data assistant analyzing sensor data for various nodes. Please include features such as significant drops or jumps in the data, as well as insights related to the health and functioning of the devices."},
+        {"role": "system", "content": "Convert time from iso format to day hour minute and second for better readability. Please don't give analytics for a timestamp; suggest it for the duration between two timestamps, as the entire data is not being passed."},
+        {"role": "user", "content": f"{query}. Here is the data: {context_data}"}
+    ]
+
+    # Hugging Face API client
+    client = InferenceClient(api_key="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")
+    
+    # Get response from the LLM
+    try:
+        stream = client.chat.completions.create(
+            model="HuggingFaceTB/SmolLM2-1.7B-Instruct", 
+            messages=messages, 
+            max_tokens=500,
+            stream=True
+        )
+        output = "".join(chunk.choices[0].delta.content for chunk in stream)
+    except Exception as e:
+        return JsonResponse({"error": f"Error generating response: {str(e)}"}, status=500)
+    
+    return JsonResponse({"response": output})
 
 
-from django.http import HttpResponse
-import csv
-from pymongo import MongoClient
-from django.conf import settings
-from datetime import datetime
 
 def download_data(request):
     # Get parameters from request
