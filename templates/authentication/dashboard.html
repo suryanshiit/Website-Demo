@@ -116,7 +116,7 @@
             </div>
 
             <!-- Download Modal -->
-  
+       
                 <div class="tab-pane fade" id="chatbot" role="tabpanel" aria-labelledby="chatbot-tab">
                     <div class="row mt-4">
                         <div class="col-md-4">
@@ -148,7 +148,30 @@
                 
         </div>
 
-
+            <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="downloadModalLabel">Download Data</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to download the data for:</p>
+                            <ul>
+                                <li><strong>Node:</strong> <span id="modalNodeId"></span></li>
+                                <li><strong>Start Date:</strong> <span id="modalStartDate"></span></li>
+                                <li><strong>End Date:</strong> <span id="modalEndDate"></span></li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" id="confirmDownloadBtn" class="btn btn-primary">Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {

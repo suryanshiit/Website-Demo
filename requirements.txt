@@ -1,3 +1,6 @@
 djongo
 django
 pymongo
+huggingface_hub
+gunicorn
+numpy

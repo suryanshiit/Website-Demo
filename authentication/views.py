@@ -34,9 +34,8 @@ def home(request):
 
 from django.http import HttpResponse
 import csv
-from datetime import datetime
+from datetime import datetime, timezone
 from django.conf import settings
-from pymongo import MongoClient
 
 mongo_uri = 'mongodb+srv://suryanshkgp:m3$JviM$d*X32cB@cluster0.lgvfa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 from django.http import JsonResponse
@@ -44,7 +43,7 @@ from django.http import JsonResponse
 from huggingface_hub import InferenceClient
 
 import numpy as np
-from datetime import datetime, timezone
+
 import pytz
 
 def convert_iso_to_ist(iso_time):
@@ -62,6 +61,18 @@ def convert_iso_to_ist(iso_time):
     ist_dt = dt.astimezone(ist_timezone)
 
     return ist_dt
+
+
+from datetime import datetime
+import pytz
+
+def convert_ist_to_human_readable(ist_datetime):
+    """Converts IST datetime to human-readable format."""
+
+    # Format the datetime object to a human-readable string
+    human_readable_datetime = ist_datetime.strftime('%Y-%m-%d %H:%M:%S %Z')
+
+    return human_readable_datetime
 
 def chatbot_query(request):
     # Parse parameters from request
@@ -85,7 +96,7 @@ def chatbot_query(request):
     readings = list(collection.find({"node_id": node_id}))
 
     data = [{
-        'timestamp': reading['timestamp'].isoformat(),
+        'timestamp': convert_ist_to_human_readable(convert_iso_to_ist(reading['timestamp'].isoformat())),
         'battery_voltage': float(reading['battery_voltage']['$numberDouble']) if isinstance(reading['battery_voltage'], dict) else float(reading['battery_voltage']),
         'solar': float(reading['solar']['$numberDouble']) if isinstance(reading['solar'], dict) else float(reading['solar']),
         'pressure': float(reading['pressure']['$numberDouble']) if isinstance(reading['pressure'], dict) else float(reading['pressure']),
@@ -102,7 +113,6 @@ def chatbot_query(request):
     context_data = "\n".join([f"Timestamp: {d['timestamp']}, Battery Voltage: {d['battery_voltage']}, Solar: {d['solar']}, Pressure: {d['pressure']}" for d in data])
     messages = [
         {"role": "system", "content": "You are a data assistant analyzing sensor data for various nodes. Please include features such as significant drops or jumps in the data, as well as insights related to the health and functioning of the devices."},
-        {"role": "system", "content": "Convert time from iso format to day hour minute and second for better readability. Please don't give analytics for a timestamp; suggest it for the duration between two timestamps, as the entire data is not being passed."},
         {"role": "user", "content": f"{query}. Here is the data: {context_data}"}
     ]
 
@@ -228,32 +238,8 @@ def signup(request):
         
     return render(request, "authentication/signup.html")
 
-from django.contrib import messages
-from django.shortcuts import redirect, render
-from django.contrib.auth.models import User
-from django.core.mail import send_mail, EmailMessage
-from django.conf import settings
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from .tokens import generate_token  # Ensure you have this utility
-from django.contrib.sites.shortcuts import get_current_site
-
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-from django.contrib import messages
-from pymongo import MongoClient
-from django.conf import settings  # Import settings to access environment variables
-import json
-
 # MongoDB connection details
 mongo_uri = 'mongodb+srv://suryanshkgp:m3$JviM$d*X32cB@cluster0.lgvfa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-
-from django.http import JsonResponse
-
-from django.http import JsonResponse
-from pymongo import MongoClient
-from datetime import datetime
 
 def get_data(request):
     node_id = request.GET.get('node_id')
@@ -270,7 +256,7 @@ def get_data(request):
         'battery_voltage': float(reading['battery_voltage']['$numberDouble']) if isinstance(reading['battery_voltage'], dict) else float(reading['battery_voltage']),
         'solar': float(reading['solar']['$numberDouble']) if isinstance(reading['solar'], dict) else float(reading['solar']),
         'pressure': float(reading['pressure']['$numberDouble']) if isinstance(reading['pressure'], dict) else float(reading['pressure']),
-        'timestamp': reading['timestamp'].isoformat()
+        'timestamp': convert_iso_to_ist(reading['timestamp'].isoformat())
     } for reading in readings]
 
     print(data)  # Print the data to the console for debugging
