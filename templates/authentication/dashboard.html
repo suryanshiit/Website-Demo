@@ -115,38 +115,34 @@
                 </div>
             </div>
 
+        </div>
             <!-- Download Modal -->
-  
-                <div class="tab-pane fade" id="chatbot" role="tabpanel" aria-labelledby="chatbot-tab">
-                    <div class="row mt-4">
-                        <div class="col-md-4">
-                            <label for="chatbotNodeSelect">Select Node:</label>
-                            <select id="chatbotNodeSelect" class="form-control">
-                                {% for node in node_ids %}
-                                    <option value="{{ node }}">{{ node }}</option>
-                                {% endfor %}
-                            </select>
+            <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="downloadModalLabel">Download Data</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-md-8">
-                            <label for="userQuery">Enter your query:</label>
-                            <textarea id="userQuery" class="form-control" rows="3"></textarea>
+                        <div class="modal-body">
+                            <p>Are you sure you want to download the data for:</p>
+                            <ul>
+                                <li><strong>Node:</strong> <span id="modalNodeId"></span></li>
+                                <li><strong>Start Date:</strong> <span id="modalStartDate"></span></li>
+                                <li><strong>End Date:</strong> <span id="modalEndDate"></span></li>
+                            </ul>
                         </div>
-                        <div class="col-md-4">
-                            <label>&nbsp;</label>
-                            <button id="submitQueryBtn" class="btn btn-primary btn-block">Submit Query</button>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-md-12">
-                            <h5>Response:</h5>
-                            <p id="chatbotResponse"></p>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" id="confirmDownloadBtn" class="btn btn-primary">Download</button>
                         </div>
                     </div>
                 </div>
+            </div>
                 
-        </div>
+       
 
 
 

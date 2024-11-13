@@ -44,6 +44,24 @@ from django.http import JsonResponse
 from huggingface_hub import InferenceClient
 
 import numpy as np
+from datetime import datetime, timezone
+import pytz
+
+def convert_iso_to_ist(iso_time):
+    """Converts ISO 8601 time to IST (Indian Standard Time)"""
+
+    # Parse the ISO 8601 string into a datetime object
+    dt = datetime.fromisoformat(iso_time)
+
+    # If the ISO string doesn't contain timezone information, assume UTC
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+
+    # Convert to IST
+    ist_timezone = pytz.timezone('Asia/Kolkata')
+    ist_dt = dt.astimezone(ist_timezone)
+
+    return ist_dt
 
 def chatbot_query(request):
     # Parse parameters from request
@@ -161,8 +179,8 @@ def download_data(request):
 
     for record in data:
         writer.writerow([
-            record["timestamp"],
-            record["node_id"],
+            convert_iso_to_ist(record["timestamp"]),
+            node_id,
             record["battery_voltage"],
             record["solar"],
             record["pressure"]
