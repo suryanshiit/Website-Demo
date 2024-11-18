@@ -65,6 +65,15 @@ def convert_iso_to_ist(iso_time):
 
 from datetime import datetime
 import pytz
+from flask import request, jsonify
+from pymongo import MongoClient
+import numpy as np
+from datetime import datetime
+import google.generativeai as genai
+
+# Configure Google Generative AI API
+genai.configure(api_key="AIzaSyAaG5Wrf-3MUqvDuNJsNvGHrFoSQs_CSZk")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 def convert_ist_to_human_readable(ist_datetime):
     """Converts IST datetime to human-readable format."""
@@ -88,51 +97,39 @@ def chatbot_query(request):
     except ValueError:
         return JsonResponse({"error": "Invalid node_id"}, status=400)
 
-    client = MongoClient(mongo_uri)
-    db = client['sensor_data']
-    collection = db['readings']
-    
-    # Fetch all data for the specified node_id
-    readings = list(collection.find({"node_id": node_id}))
-
-    data = [{
-        'timestamp': convert_ist_to_human_readable(convert_iso_to_ist(reading['timestamp'].isoformat())),
-        'battery_voltage': float(reading['battery_voltage']['$numberDouble']) if isinstance(reading['battery_voltage'], dict) else float(reading['battery_voltage']),
-        'solar': float(reading['solar']['$numberDouble']) if isinstance(reading['solar'], dict) else float(reading['solar']),
-        'pressure': float(reading['pressure']['$numberDouble']) if isinstance(reading['pressure'], dict) else float(reading['pressure']),
-    } for reading in readings]
-
-    client.close()
-    
-    # Sample 20 equally distributed data points
-    if len(data) > 20:
-        indices = np.linspace(0, len(data) - 1, 20, dtype=int)
-        data = [data[i] for i in indices]
-
-    # Prepare messages for LLM API
-    context_data = "\n".join([f"Timestamp: {d['timestamp']}, Battery Voltage: {d['battery_voltage']}, Solar: {d['solar']}, Pressure: {d['pressure']}" for d in data])
-    messages = [
-        {"role": "system", "content": "You are a data assistant analyzing sensor data for various nodes. Please include features such as significant drops or jumps in the data, as well as insights related to the health and functioning of the devices."},
-        {"role": "user", "content": f"{query}. Here is the data: {context_data}"}
-    ]
-
-    # Hugging Face API client
-    client = InferenceClient(api_key="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")
-    
-    # Get response from the LLM
     try:
-        stream = client.chat.completions.create(
-            model="HuggingFaceTB/SmolLM2-1.7B-Instruct", 
-            messages=messages, 
-            max_tokens=500,
-            stream=True
-        )
-        output = "".join(chunk.choices[0].delta.content for chunk in stream)
-    except Exception as e:
-        return JsonResponse({"error": f"Error generating response: {str(e)}"}, status=500)
-    
-    return JsonResponse({"response": output})
+        client = MongoClient(mongo_uri)
+        db = client['sensor_data']
+        collection = db['readings']
+        
+        # Fetch all data for the specified node_id
+        readings = list(collection.find({"node_id": node_id}))
 
+        data = [{
+            'timestamp': convert_ist_to_human_readable(convert_iso_to_ist(reading['timestamp'].isoformat())),
+            'battery_voltage': float(reading['battery_voltage']['$numberDouble']) if isinstance(reading['battery_voltage'], dict) else float(reading['battery_voltage']),
+            'solar': float(reading['solar']['$numberDouble']) if isinstance(reading['solar'], dict) else float(reading['solar']),
+            'pressure': float(reading['pressure']['$numberDouble']) if isinstance(reading['pressure'], dict) else float(reading['pressure']),
+        } for reading in readings]
+
+        client.close()
+        
+        # Sample 20 equally distributed data points
+        if len(data) > 20:
+            indices = np.linspace(0, len(data) - 1, 20, dtype=int)
+            data = [data[i] for i in indices]
+
+        # Prepare context data as a single string
+        context_data = "\n".join([f"Timestamp: {d['timestamp']}, Battery Voltage: {d['battery_voltage']}, Solar: {d['solar']}, Pressure: {d['pressure']}" for d in data])
+
+        # Prepare the query with context
+        prompt = f"{query}. Here is the data:\n\n{context_data}"
+
+        # Use Google Generative AI API to generate response
+        response = model.generate_content(prompt)
+        return JsonResponse({"response": response.text})
+    except Exception as e:
+        return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
 
 
 def download_data(request):

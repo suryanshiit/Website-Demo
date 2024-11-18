@@ -4,3 +4,8 @@ pymongo
 huggingface_hub
 gunicorn
 numpy
+six
+flask
+google-cloud
+google-generativeai
+google-api-python-client
