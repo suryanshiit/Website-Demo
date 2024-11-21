@@ -5,7 +5,56 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
+    {% load pwa %}
+    {% progressive_web_app_meta %}
+    {% load static %}
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <script src="{% static 'js/app.js' %}"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Style for the install prompt */
+        #install-prompt {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            display: none;
+            z-index: 9999;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease;
+        }
+
+        #install-prompt .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #install-prompt button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #install-prompt button.cancel-btn {
+            background-color: red;
+        }
+
+        /* Responsive: On Android, cover a larger part of the screen */
+        @media (max-width: 600px) {
+            #install-prompt {
+                width: 80%;
+                bottom: 50px;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -34,7 +83,15 @@
         <button type="submit" class="btn btn-primary">Login</button>
         <button class="btn btn-link"><a href="{% url 'signup' %}">Sign Up</a></button>
     </form>
-    
+</div>
+
+<!-- Install Prompt (Initially hidden) -->
+<div id="install-prompt">
+    <div class="content">
+        <span>Install Our App</span>
+        <button id="cancel-btn" class="cancel-btn">✖</button>
+    </div>
+    <button id="install-btn">Install</button>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

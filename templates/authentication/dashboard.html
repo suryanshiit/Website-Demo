@@ -1,17 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#317EFB">
     <title>Sensor Data Dashboard</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .card-header h5 {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Chart Layout */
+        .charts-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .charts-row .chart-card {
+            flex: 1 1 calc(100% - 2rem);
+            min-width: 100%;
+        }
+
+        /* Medium and larger screens */
+        @media (min-width: 768px) {
+            .charts-row .chart-card {
+                flex: 1 1 calc(33.33% - 2rem);
+                min-width: calc(33.33% - 2rem);
+            }
+        }
+
+        /* Small adjustments for better usability */
+        label {
+            font-weight: bold;
+        }
+
+        .btn {
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Header Section with Logout Button -->
-        <div class="header p-4 text-center d-flex justify-content-between align-items-center">
+        <div class="header p-4 d-flex justify-content-between align-items-center">
             <h1 class="mb-0">Sensor Data Dashboard</h1>
             <button onclick="window.location.href='logout/'" class="btn btn-danger">Logout</button>
         </div>
@@ -19,13 +67,16 @@
         <!-- Tabs for Analytics and Downloads -->
         <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="analytics" aria-selected="true">Analytics</a>
+                <a class="nav-link active" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab"
+                    aria-controls="analytics" aria-selected="true">Analytics</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="downloads-tab" data-toggle="tab" href="#downloads" role="tab" aria-controls="downloads" aria-selected="false">Downloads</a>
+                <a class="nav-link" id="downloads-tab" data-toggle="tab" href="#downloads" role="tab"
+                    aria-controls="downloads" aria-selected="false">Downloads</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="chatbot-tab" data-toggle="tab" href="#chatbot" role="tab" aria-controls="chatbot" aria-selected="false">Chatbot</a>
+                <a class="nav-link" id="chatbot-tab" data-toggle="tab" href="#chatbot" role="tab"
+                    aria-controls="chatbot" aria-selected="false">Chatbot</a>
             </li>
         </ul>
 
@@ -38,7 +89,7 @@
                         <label for="analyticsNodeSelect">Select Node:</label>
                         <select id="analyticsNodeSelect" class="form-control">
                             {% for node in node_ids %}
-                                <option value="{{ node }}">{{ node }}</option>
+                            <option value="{{ node }}">{{ node }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -47,40 +98,35 @@
                         <button id="fetchDataBtn" class="btn btn-primary btn-block">Fetch Data</button>
                     </div>
                     <div class="col-md-4">
-                        <p>Currently displaying data for Node: <strong><span id="analyticsSelectedNode"></span></strong></p>
+                        <p>Currently displaying data for Node: <strong><span id="analyticsSelectedNode"></span></strong>
+                        </p>
                     </div>
                 </div>
 
-                <!-- Row for charts -->
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Battery Voltage</h5>
-                            </div>
-                            <div class="card-body">
-                                <div id="batteryChart"></div>
-                            </div>
+                <!-- Charts Section -->
+                <div class="charts-row mt-4">
+                    <div class="chart-card card">
+                        <div class="card-header">
+                            <h5>Battery Voltage</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="batteryChart"></div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Solar Power</h5>
-                            </div>
-                            <div class="card-body">
-                                <div id="solarChart"></div>
-                            </div>
+                    <div class="chart-card card">
+                        <div class="card-header">
+                            <h5>Solar Power</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="solarChart"></div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Pressure</h5>
-                            </div>
-                            <div class="card-body">
-                                <div id="pressureChart"></div>
-                            </div>
+                    <div class="chart-card card">
+                        <div class="card-header">
+                            <h5>Pressure</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="pressureChart"></div>
                         </div>
                     </div>
                 </div>

@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from . info import *
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'static/js', 'serviceworker.js')
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -129,9 +132,56 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # Project's static directory
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"  # Directory for collectstatic (used in production)
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+# PWA Settings
+PWA_APP_NAME = 'My Django PWA'
+PWA_APP_DESCRIPTION = "A Progressive Web App built with Django"
+PWA_APP_THEME_COLOR = '#0000FF'  # Blue
+PWA_APP_BACKGROUND_COLOR = '#FFFFFF'  # White
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+
+# Icons for the PWA
+
+PWA_APP_ICONS = [
+    {
+        'src': 'static/images/BTP.png',
+        'sizes': '1024x1024',
+        'type': 'image/png'
+    }
+]
+
+# Apple-specific icons (for iOS devices)
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': 'static/images/BTP.png',
+        'sizes': '1024x1024',
+        'type': 'image/png'
+    }
+]
+
+# Splash screen settings (optional)
+PWA_APP_SPLASH_SCREEN = [
+    {
+        'src': 'static/images/BTP.png',
+        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+    }
+]
+
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'
