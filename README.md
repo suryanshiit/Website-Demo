@@ -7,7 +7,7 @@
 ---
 ## 📖 Overview
 
-BTP-Final-FullStack is a full-stack web application built with **Django** for the backend and modern frontend technologies. The project showcases robust backend development, responsive frontend, and a scalable deployment pipeline. It addresses [Insert Project Goal/Use Case].
+BTP-Final-FullStack is a full-stack web application built with **Django** for the backend and modern frontend technologies. The project showcases robust backend development, responsive frontend, and a scalable deployment pipeline. 
 
 ---
 ## 🔥 Features
@@ -16,7 +16,7 @@ BTP-Final-FullStack is a full-stack web application built with **Django** for th
 - **Dynamic Web Pages** served by Django templates.
 - **Secure User Authentication** with Django's built-in authentication system.
 - **RESTful APIs** using Django REST Framework (DRF).
-- **Real-Time Updates** (if applicable, e.g., WebSockets or Django Channels).
+- **Real-Time Updates** 
 - **Scalable Deployment** on AWS EC2.
 
 ---
@@ -29,10 +29,10 @@ Here’s a quick preview of the application in action:
 ![Home Page Demo](description/page1.png) <!-- Replace with your GIF -->
 
 ### 🎬 User Dashboard
-![User Dashboard Demo](description/page2.png) <!-- Replace with your GIF -->
+![Download Data](description/page2.png) <!-- Replace with your GIF -->
 
 ### 🎬 Admin Interface
-![Admin Interface Demo](description/page3.png) <!-- Replace with your GIF -->
+![LLM based Chatbot](description/page3.png) <!-- Replace with your GIF -->
 
 ---
 
@@ -64,19 +64,6 @@ Follow these steps to set up the project locally:
    ```bash
    git clone https://github.com/your-username/BTP-Final-FullStack.git
    cd BTP-Final-FullStack
-
-📂 Project Structure
-BTP-Final-FullStack/
-├── backend/           # Django backend
-│   ├── core/          # Core Django app
-│   ├── api/           # Django REST API app
-│   ├── templates/     # Django templates
-│   ├── static/        # Static files (CSS, JS, Images)
-├── frontend/          # React app (if applicable)
-├── media/             # Uploaded files
-├── manage.py          # Django project manager
-├── requirements.txt   # Backend dependencies
-└── README.md          # Documentation
 
  📂 Backend Setup
 ## Create a virtual environment
