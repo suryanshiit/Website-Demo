@@ -1,6 +1,6 @@
 # 🌐 BTP-Final-FullStack
 
-![Project Banner](https://via.placeholder.com/./description/description.png?text=Your+Project+Banner) <!-- Replace with an actual banner -->
+![Project Banner](description/description.png) <!-- Relative path to the banner image -->
 
 🚀 **Deployed Project Link**: [BTP-Final-FullStack](http://3.109.19.112/)
 
@@ -26,25 +26,25 @@ BTP-Final-FullStack is a full-stack web application built with **Django** for th
 Here’s a quick preview of the application in action:
 
 ### 🎬 Home Page
-![Home Page Demo](https://via.placeholder.com/./description/page1.png) <!-- Replace with your GIF -->
+![Home Page Demo](description/page1.png) <!-- Replace with your GIF -->
 
 ### 🎬 User Dashboard
-![User Dashboard Demo](https://via.placeholder.com/./description/page2.png) <!-- Replace with your GIF -->
+![User Dashboard Demo](description/page2.png) <!-- Replace with your GIF -->
 
 ### 🎬 Admin Interface
-![Admin Interface Demo](https://via.placeholder.com/./description/page3.png) <!-- Replace with your GIF -->
+![Admin Interface Demo](description/page3.png) <!-- Replace with your GIF -->
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Backend:
-- **Django** - A high-level Python web framework.
+- **Django** 
 - **Django REST Framework (DRF)** - For building APIs.
-- **SQLite/MySQL/PostgreSQL** - Database solutions.
+- **MySQL** - Database solutions.
 
 ### Frontend:
-- **React.js** / Django Templates (if used directly for rendering).
+- **React.js** / Django Templates 
 - **CSS/Bootstrap** for styling.
 
 ### Deployment:
@@ -57,11 +57,6 @@ Here’s a quick preview of the application in action:
 ## ⚙️ Setup and Installation
 
 Follow these steps to set up the project locally:
-
-### Prerequisites
-- **Python 3.8+**
-- **pipenv** (or virtualenv for environment management)
-- **Node.js** (if using React for the frontend)
 
 ### Installation
 
@@ -84,15 +79,15 @@ BTP-Final-FullStack/
 └── README.md          # Documentation
 
  📂 Backend Setup
- # Create a virtual environment
+## Create a virtual environment
     python -m venv env
     source env/bin/activate  # For Windows: env\Scripts\activate
 
-# Install dependencies
+## Install dependencies
     pip install -r requirements.txt
 
-# Apply migrations
+## Apply migrations
     python manage.py migrate
 
-# Start the Django development server
+## Start the Django development server
     python manage.py runserver
