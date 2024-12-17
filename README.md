@@ -1,6 +1,6 @@
 # 🌐 BTP-Final-FullStack
 
-![Project Banner](https://via.placeholder.com/description.png?text=Your+Project+Banner) <!-- Replace with an actual banner -->
+![Project Banner](https://via.placeholder.com/./description/description.png?text=Your+Project+Banner) <!-- Replace with an actual banner -->
 
 🚀 **Deployed Project Link**: [BTP-Final-FullStack](http://3.109.19.112/)
 
@@ -26,13 +26,13 @@ BTP-Final-FullStack is a full-stack web application built with **Django** for th
 Here’s a quick preview of the application in action:
 
 ### 🎬 Home Page
-![Home Page Demo](https://via.placeholder.com/page1.png) <!-- Replace with your GIF -->
+![Home Page Demo](https://via.placeholder.com/./description/page1.png) <!-- Replace with your GIF -->
 
 ### 🎬 User Dashboard
-![User Dashboard Demo](https://via.placeholder.com/page2.png) <!-- Replace with your GIF -->
+![User Dashboard Demo](https://via.placeholder.com/./description/page2.png) <!-- Replace with your GIF -->
 
 ### 🎬 Admin Interface
-![Admin Interface Demo](https://via.placeholder.com/page3.png) <!-- Replace with your GIF -->
+![Admin Interface Demo](https://via.placeholder.com/./description/page3.png) <!-- Replace with your GIF -->
 
 ---
 
