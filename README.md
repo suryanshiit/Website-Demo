@@ -21,17 +21,17 @@ BTP-Final-FullStack is a full-stack web application built with **Django** for th
 
 ---
 
-## 📽️ Demo (Add GIFs)
+## 📽️ Pictures
 
 Here’s a quick preview of the application in action:
 
-### 🎬 Home Page
+### 🎬 Home Dashboard
 ![Home Page Demo](description/page1.png) <!-- Replace with your GIF -->
 
-### 🎬 User Dashboard
+### 🎬 Data Download Dashboard
 ![Download Data](description/page2.png) <!-- Replace with your GIF -->
 
-### 🎬 Admin Interface
+### 🎬 Chatbot Interface
 ![LLM based Chatbot](description/page3.png) <!-- Replace with your GIF -->
 
 ---
