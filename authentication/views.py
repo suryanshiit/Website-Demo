@@ -37,7 +37,7 @@ import csv
 from datetime import datetime, timezone
 from django.conf import settings
 
-mongo_uri = 'mongodb+srv://suryanshkgp:m3$JviM$d*X32cB@cluster0.lgvfa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+mongo_uri = 'mongodb://admin:mybtp@3.109.19.112:27017/'
 from django.http import JsonResponse
 
 from huggingface_hub import InferenceClient
@@ -236,7 +236,7 @@ def signup(request):
     return render(request, "authentication/signup.html")
 
 # MongoDB connection details
-mongo_uri = 'mongodb+srv://suryanshkgp:m3$JviM$d*X32cB@cluster0.lgvfa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+#mongo_uri = 'mongodb+srv://suryanshkgp:m3$JviM$d*X32cB@cluster0.lgvfa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 def get_data(request):
     node_id = request.GET.get('node_id')
