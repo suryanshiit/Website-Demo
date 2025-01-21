@@ -12,5 +12,7 @@ urlpatterns = [
     path('download-csv/', views.download_csv, name='download_csv'),
     path('get_data', views.get_data, name='get_data'),
     path("download_data", views.download_data, name="download_data"),
+    path("log_download_data", views.log_download_data, name="download_data"),
     path('chatbot_query', views.chatbot_query, name='chatbot_query'),
+    path('fetch-logs/', views.fetch_logs, name='fetch_logs'),
 ]

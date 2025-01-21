@@ -72,7 +72,11 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="downloads-tab" data-toggle="tab" href="#downloads" role="tab"
-                    aria-controls="downloads" aria-selected="false">Downloads</a>
+                    aria-controls="downloads" aria-selected="false">Data Downloads</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="log-downloads-tab" data-toggle="tab" href="#log-downloads" role="tab"
+                    aria-controls="log-downloads" aria-selected="false">Logs Downloads</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="chatbot-tab" data-toggle="tab" href="#chatbot" role="tab"
@@ -130,39 +134,110 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Downloads Tab -->
-            <div class="tab-pane fade" id="downloads" role="tabpanel" aria-labelledby="downloads-tab">
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        <label for="downloadNodeSelect">Select Node:</label>
-                        <select id="downloadNodeSelect" class="form-control">
+                <div class="logs-section mt-4">
+                    <h5>Logs</h5>
+                    <div class="form-group">
+                        <label for="logNodeSelect">Select Node:</label>
+                        <select id="logNodeSelect" class="form-control">
                             {% for node in node_ids %}
                                 <option value="{{ node }}">{{ node }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <p>Downloading data for Node: <strong><span id="downloadSelectedNode"></span></strong></p>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="startDate">Start Date:</label>
-                        <input type="date" id="startDate" class="form-control">
-                    </div>
-                    <div class="col-md-2">
-                        <label for="endDate">End Date:</label>
-                        <input type="date" id="endDate" class="form-control">
-                    </div>
-                    <div class="col-md-2">
-                        <label>&nbsp;</label>
-                        <button id="openDownloadModalBtn" class="btn btn-primary btn-block" data-toggle="modal" data-target="#downloadModal">Download CSV</button>
-                    </div>
+                    <ul id="logsList" class="list-group mt-3">
+                         <!-- Logs will be appended here  -->
+                    </ul>
                 </div>
             </div>
 
-            <!-- Download Modal -->
-       
+      
+
+
+            <!-- Downloads Tab -->
+                <div class="tab-pane fade" id="downloads" role="tabpanel" aria-labelledby="downloads-tab">
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <label for="downloadNodeSelect">Select Node:</label>
+                            <select id="downloadNodeSelect" class="form-control">
+                                {% for node in node_ids %}
+                                    <option value="{{ node }}">{{ node }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <p>Downloading data for Node: <strong><span id="downloadSelectedNode"></span></strong></p>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label>&nbsp;</label>
+                            <button id="openDownloadModalBtn" class="btn btn-primary btn-block" data-toggle="modal" data-target="#downloadModal" data-download-type="data">Download CSV</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log Downloads Tab -->
+                <div class="tab-pane fade" id="log-downloads" role="tabpanel" aria-labelledby="log-downloads-tab">
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <label for="logDownloadNodeSelect">Select Node:</label>
+                            <select id="logDownloadNodeSelect" class="form-control">
+                                {% for node in node_ids %}
+                                    <option value="{{ node }}">{{ node }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <p>Downloading logs for Node: <strong><span id="logDownloadSelectedNode"></span></strong></p>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="logStartDate">Start Date:</label>
+                            <input type="date" id="logStartDate" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="logEndDate">End Date:</label>
+                            <input type="date" id="logEndDate" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label>&nbsp;</label>
+                            <button id="openLogDownloadModalBtn" class="btn btn-primary btn-block" data-toggle="modal" data-target="#downloadModal" data-download-type="log">Download Logs</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Modal -->
+                <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="downloadModalLabel">Download Data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to download the data for:</p>
+                                <ul>
+                                    <li><strong>Node:</strong> <span id="modalNodeId"></span></li>
+                                    <li><strong>Start Date:</strong> <span id="modalStartDate"></span></li>
+                                    <li><strong>End Date:</strong> <span id="modalEndDate"></span></li>
+                                </ul>
+                                <input type="hidden" id="downloadType">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" id="confirmDownloadBtn" class="btn btn-primary">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="tab-pane fade" id="chatbot" role="tabpanel" aria-labelledby="chatbot-tab">
                     <div class="row mt-4">
                         <div class="col-md-4">
@@ -191,34 +266,67 @@
                         </div>
                     </div>
                 </div>
+            </div>
                 
         </div>
 
-            <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="downloadModalLabel">Download Data</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to download the data for:</p>
-                            <ul>
-                                <li><strong>Node:</strong> <span id="modalNodeId"></span></li>
-                                <li><strong>Start Date:</strong> <span id="modalStartDate"></span></li>
-                                <li><strong>End Date:</strong> <span id="modalEndDate"></span></li>
-                            </ul>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="button" id="confirmDownloadBtn" class="btn btn-primary">Download</button>
-                        </div>
+        <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downloadModalLabel">Download Data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to download the data for:</p>
+                        <ul>
+                            <li><strong>Node:</strong> <span id="modalNodeId"></span></li>
+                            <li><strong>Start Date:</strong> <span id="modalStartDate"></span></li>
+                            <li><strong>End Date:</strong> <span id="modalEndDate"></span></li>
+                        </ul>
+                        <input type="hidden" id="downloadType">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmDownloadBtn" class="btn btn-primary">Download</button>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logNodeSelect = document.getElementById('logNodeSelect');
+            const logsList = document.getElementById('logsList');
+
+            logNodeSelect.addEventListener('change', function() {
+                const nodeId = logNodeSelect.value;
+                fetchLogs(nodeId);
+            });
+
+            function fetchLogs(nodeId) {
+                fetch(`/fetch-logs/?node_id=${nodeId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        logsList.innerHTML = '';
+                        data.logs.forEach(log => {
+                            const logItem = document.createElement('li');
+                            logItem.className = 'list-group-item';
+                            logItem.textContent = `Node ${log.node_id}: "${log.message}" at ${log.timestamp}`;
+                            logsList.appendChild(logItem);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching logs:', error));
+            }
+
+            // Fetch logs for the initially selected node
+            fetchLogs(logNodeSelect.value);
+        });
+        </script>
+
+        
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 const submitQueryBtn = document.getElementById("submitQueryBtn");
@@ -312,35 +420,44 @@
                 // Initialize plots for the default selected node
                 updatePlots(analyticsNodeSelect.value);
 
-                // Download button functionality
-                const downloadBtn = document.getElementById("openDownloadModalBtn");
+                const openDownloadModalBtn = document.getElementById("openDownloadModalBtn");
+                const openLogDownloadModalBtn = document.getElementById("openLogDownloadModalBtn");
                 const confirmDownloadBtn = document.getElementById("confirmDownloadBtn");
-                const downloadNodeSelect = document.getElementById("downloadNodeSelect");
-                const startDateInput = document.getElementById("startDate");
-                const endDateInput = document.getElementById("endDate");
+                const downloadTypeInput = document.getElementById("downloadType");
 
-                downloadBtn.addEventListener("click", () => {
-                    // Set modal values
-                    document.getElementById("modalNodeId").textContent = downloadNodeSelect.value;
-                    document.getElementById("modalStartDate").textContent = startDateInput.value;
-                    document.getElementById("modalEndDate").textContent = endDateInput.value;
+                openDownloadModalBtn.addEventListener("click", () => {
+                    document.getElementById("modalNodeId").textContent = document.getElementById("downloadNodeSelect").value;
+                    document.getElementById("modalStartDate").textContent = document.getElementById("startDate").value;
+                    document.getElementById("modalEndDate").textContent = document.getElementById("endDate").value;
+                    downloadTypeInput.value = "data";
+                });
+
+                openLogDownloadModalBtn.addEventListener("click", () => {
+                    document.getElementById("modalNodeId").textContent = document.getElementById("logDownloadNodeSelect").value;
+                    document.getElementById("modalStartDate").textContent = document.getElementById("logStartDate").value;
+                    document.getElementById("modalEndDate").textContent = document.getElementById("logEndDate").value;
+                    downloadTypeInput.value = "log";
                 });
 
                 confirmDownloadBtn.addEventListener("click", () => {
-                    const nodeId = downloadNodeSelect.value;
-                    const startDate = startDateInput.value;
-                    const endDate = endDateInput.value;
+                    const nodeId = document.getElementById("modalNodeId").textContent;
+                    const startDate = document.getElementById("modalStartDate").textContent;
+                    const endDate = document.getElementById("modalEndDate").textContent;
+                    const downloadType = downloadTypeInput.value;
 
                     if (!nodeId || !startDate || !endDate) {
                         alert("Please select a node and date range.");
                         return;
                     }
 
-                    // Build download URL with query parameters
-                    const downloadUrl = `/download_data?node_id=${nodeId}&start_date=${startDate}&end_date=${endDate}`;
-                    window.location.href = downloadUrl;
+                    let downloadUrl;
+                    if (downloadType === "data") {
+                        downloadUrl = `/download_data?node_id=${nodeId}&start_date=${startDate}&end_date=${endDate}`;
+                    } else if (downloadType === "log") {
+                        downloadUrl = `/log_download_data?node_id=${nodeId}&start_date=${startDate}&end_date=${endDate}`;
+                    }
 
-                    // Close modal after download
+                    window.location.href = downloadUrl;
                     $('#downloadModal').modal('hide');
                 });
             });

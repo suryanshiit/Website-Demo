@@ -13,29 +13,27 @@ from . tokens import generate_token
 from dateutil.parser import parse
 from datetime import datetime
 
+from datetime import datetime
+import pytz
+from flask import request, jsonify
+from pymongo import MongoClient
+import numpy as np
+from datetime import datetime
+import google.generativeai as genai
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-# Create your views here.
-import csv
-from datetime import datetime
-from pymongo import MongoClient
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 import json
-from django.http import HttpResponse
-from datetime import datetime
-#from .models import SensorData  # Adjust this line based on your actual model or data-fetching method
-from pymongo import MongoClient
-
-def home(request):
-    return render(request, "authentication/index.html")
-
 from django.http import HttpResponse
 import csv
 from datetime import datetime, timezone
 from django.conf import settings
+
+def home(request):
+    return render(request, "authentication/index.html")
+
+
 
 mongo_uri = 'mongodb://admin:mybtp@3.109.19.112:27017/'
 from django.http import JsonResponse
@@ -61,15 +59,6 @@ def convert_iso_to_ist(iso_time):
     ist_dt = dt.astimezone(ist_timezone)
 
     return ist_dt
-
-
-from datetime import datetime
-import pytz
-from flask import request, jsonify
-from pymongo import MongoClient
-import numpy as np
-from datetime import datetime
-import google.generativeai as genai
 
 # Configure Google Generative AI API
 genai.configure(api_key="AIzaSyAaG5Wrf-3MUqvDuNJsNvGHrFoSQs_CSZk")
@@ -131,6 +120,95 @@ def chatbot_query(request):
     except Exception as e:
         return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
 
+
+
+def fetch_logs(request):
+    node_id = request.GET.get('node_id')
+    if not node_id:
+        return JsonResponse({"error": "Node ID is required"}, status=400)
+
+    # Connect to MongoDB
+    client = MongoClient(mongo_uri)
+    db = client['sensor_data']
+    logs_collection = db['logs']
+
+    # Fetch logs for the specified node_id
+    logs_cursor = logs_collection.find({'node_id': int(node_id)}).sort('timestamp', -1)
+    logs = []
+    for log in logs_cursor:
+        logs.append({
+            'node_id': log['node_id'],
+            'message': log['message'],
+            'timestamp': log['timestamp']
+        })
+
+    # Close the MongoDB connection
+    client.close()
+
+    if len(logs) == 0:
+        return JsonResponse({"logs": "No logs found for the specified node"})
+
+    return JsonResponse({'logs': logs})
+
+def log_download_data(request):
+    # Get parameters from request
+    node_id = request.GET.get("node_id")
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+
+    if not node_id or not start_date or not end_date:
+        return HttpResponse("Missing required parameters", status=400)
+
+    try:
+        node_id = int(node_id)  # Convert node_id to int
+        start_date = datetime.fromisoformat(start_date)
+        end_date = datetime.fromisoformat(end_date)
+    except ValueError:
+        return HttpResponse("Invalid date format", status=400)
+
+    # Connect to MongoDB
+
+    client = MongoClient(mongo_uri)
+    db = client['sensor_data']
+    collection = db['logs']
+
+    # Query MongoDB for the specified node and date range
+    query = {
+        "node_id": node_id,
+        "timestamp": {
+            "$gte": start_date,
+            "$lt": end_date.replace(hour=23, minute=59, second=59, microsecond=999999)  # End of the selected end day
+        }
+    }
+    projection = {"_id": 0, "timestamp": 1, "node_id": 1, "message": 1}
+    readings = collection.find(query, projection).sort("timestamp", 1)
+
+    # Format data
+    data = [{
+        'timestamp': reading['timestamp'].isoformat(),
+        'node_id': reading.get('node_id'),
+        'message': reading.get('message', 'No message')
+    } for reading in readings]
+
+    # Close the MongoDB connection
+    client.close()
+
+    # Prepare CSV response
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = f"attachment; filename=logs_node_{node_id}_{start_date.strftime('%Y%m%d')}_{end_date.strftime('%Y%m%d')}.csv"
+
+    # Write data to CSV
+    writer = csv.writer(response)
+    writer.writerow(["Timestamp", "Node ID", "Message"])
+
+    for record in data:
+        writer.writerow([
+            convert_iso_to_ist(record["timestamp"]),  # Assuming you have a helper function for IST conversion
+            record["node_id"],
+            record["message"]
+        ])
+
+    return response
 
 def download_data(request):
     # Get parameters from request
