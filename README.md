@@ -4,7 +4,7 @@
 
 🚀 **Deployed Project Link**: [BTP-Final-FullStack](http://3.109.19.112/)
 
-🚀 **Deployed Graphana Link**: [BTP-Final-FullStack]([http://3.109.19.112/](https://suryanshkgp.grafana.net/public-dashboards/ff35f2650b0b4022a30ad68b3561e975?var-nodeid=$__all&orgId=1))
+🚀 **Deployed Graphana Link**: [Dashboard](http://3.109.19.112/](https://suryanshkgp.grafana.net/public-dashboards/ff35f2650b0b4022a30ad68b3561e975?var-nodeid=$__all&orgId=1)
 
 ---
 ## 📖 Overview
@@ -27,6 +27,8 @@ BTP-Final-FullStack is a full-stack web application built with **Django** for th
 ## 📽️ Pictures
 
 Here’s a quick preview of the application in action:
+### 🎬 Graphana
+![Graphana](description/graphana.png) <!-- Replace with your GIF -->
 
 ### 🎬 Home Dashboard
 ![Home Page Demo](description/page1.png) <!-- Replace with your GIF -->
