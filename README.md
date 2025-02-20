@@ -2,9 +2,9 @@
 
 ![Project Banner](description/description.png) <!-- Relative path to the banner image -->
 
-🚀 **Deployed Project Link**: [BTP-Final-FullStack](http://3.109.19.112/)
+🚀 **Deployed FullStack Project Link**: [BTP-Final-FullStack](http://3.109.19.112/)
 
-🚀 **Deployed Graphana Link**: [Dashboard](https://suryanshkgp.grafana.net/public-dashboards/ff35f2650b0b4022a30ad68b3561e975?var-nodeid=$__all&orgId=1)
+🚀 **Deployed Graphana Project Link**: [Dashboard](https://suryanshkgp.grafana.net/public-dashboards/ff35f2650b0b4022a30ad68b3561e975?var-nodeid=$__all&orgId=1)
 
 ---
 ## 📖 Overview
