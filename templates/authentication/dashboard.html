@@ -53,6 +53,28 @@
         .btn {
             font-size: 0.9rem;
         }
+
+        
+        .iframe-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    iframe {
+        width: 100%;
+        height: 800px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
     </style>
 </head>
 
@@ -86,72 +108,15 @@
 
         <!-- Tab Content -->
         <div class="tab-content" id="dashboardTabsContent">
+                    <!-- Analytics Tab -->
             <!-- Analytics Tab -->
             <div class="tab-pane fade show active" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        <label for="analyticsNodeSelect">Select Node:</label>
-                        <select id="analyticsNodeSelect" class="form-control">
-                            {% for node in node_ids %}
-                            <option value="{{ node }}">{{ node }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label>&nbsp;</label>
-                        <button id="fetchDataBtn" class="btn btn-primary btn-block">Fetch Data</button>
-                    </div>
-                    <div class="col-md-4">
-                        <p>Currently displaying data for Node: <strong><span id="analyticsSelectedNode"></span></strong>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Charts Section -->
-                <div class="charts-row mt-4">
-                    <div class="chart-card card">
-                        <div class="card-header">
-                            <h5>Battery Voltage</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="batteryChart"></div>
-                        </div>
-                    </div>
-                    <div class="chart-card card">
-                        <div class="card-header">
-                            <h5>Solar Power</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="solarChart"></div>
-                        </div>
-                    </div>
-                    <div class="chart-card card">
-                        <div class="card-header">
-                            <h5>Pressure</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="pressureChart"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="logs-section mt-4">
-                    <h5>Logs</h5>
-                    <div class="form-group">
-                        <label for="logNodeSelect">Select Node:</label>
-                        <select id="logNodeSelect" class="form-control">
-                            {% for node in node_ids %}
-                                <option value="{{ node }}">{{ node }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <ul id="logsList" class="list-group mt-3">
-                         <!-- Logs will be appended here  -->
-                    </ul>
+                <!-- Iframe Section -->
+                <div class="iframe-container mt-4">
+                    <iframe src="http://3.109.19.112:3000/d/deej1raksp4owc/final?orgId=1&from=now-1h&to=now&timezone=browser&var-node_id=1" width="100%" height="600px" frameborder="0"></iframe>
                 </div>
             </div>
-
-      
-
+        </div>
 
             <!-- Downloads Tab -->
                 <div class="tab-pane fade" id="downloads" role="tabpanel" aria-labelledby="downloads-tab">
