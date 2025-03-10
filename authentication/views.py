@@ -387,30 +387,30 @@ def signup(request):
 
 def dashboard_view(request):
     if request.user.is_authenticated:
-        client = MongoClient(mongo_uri)
-        db = client['sensor_data']
-        collection = db['readings']
+        # client = MongoClient(mongo_uri)
+        # db = client['sensor_data']
+        # collection = db['readings']
         
-        # Get distinct nodes
-        node_ids = collection.distinct("node_id")
+        # # Get distinct nodes
+        # node_ids = collection.distinct("node_id")
 
-        # Fetch sensor data
-        readings = list(collection.find())
-        data = [{
-            'node_id': reading.get('node_id'),
-            'battery_voltage': float(reading['battery_voltage']['$numberDouble']) if isinstance(reading['battery_voltage'], dict) else float(reading['battery_voltage']),
-            'solar': float(reading['solar']['$numberDouble']) if isinstance(reading['solar'], dict) else float(reading['solar']),
-            'pressure': float(reading['pressure']['$numberDouble']) if isinstance(reading['pressure'], dict) else float(reading['pressure']),
-            'timestamp': reading['timestamp'].isoformat() if isinstance(reading['timestamp'], datetime) else reading['timestamp']
-        } for reading in readings]
+        # # Fetch sensor data
+        # readings = list(collection.find())
+        # data = [{
+        #     'node_id': reading.get('node_id'),
+        #     'battery_voltage': float(reading['battery_voltage']['$numberDouble']) if isinstance(reading['battery_voltage'], dict) else float(reading['battery_voltage']),
+        #     'solar': float(reading['solar']['$numberDouble']) if isinstance(reading['solar'], dict) else float(reading['solar']),
+        #     'pressure': float(reading['pressure']['$numberDouble']) if isinstance(reading['pressure'], dict) else float(reading['pressure']),
+        #     'timestamp': reading['timestamp'].isoformat() if isinstance(reading['timestamp'], datetime) else reading['timestamp']
+        # } for reading in readings]
         
-        client.close()
+        # client.close()
 
-        latest_data = data[-1] if data else None
+        # latest_data = data[-1] if data else None
         return render(request, "authentication/dashboard.html", {
-            'data': json.dumps(data),  # Ensures data is always a JSON array
-            'latest_data': latest_data,
-            'node_ids': node_ids
+            # 'data': json.dumps(data),  # Ensures data is always a JSON array
+            # 'latest_data': latest_data,
+            # 'node_ids': node_ids
         })
 
     else:

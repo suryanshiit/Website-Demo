@@ -346,41 +346,7 @@
                     updatePlots(analyticsNodeSelect.value);
                 });
 
-                function updatePlots(nodeId) {
-                    fetch(`/get_data?node_id=${nodeId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            const timestamps = data.map(reading => new Date(reading.timestamp));
-                            const batteryData = data.map(reading => reading.battery_voltage);
-                            const solarData = data.map(reading => reading.solar);
-                            const pressureData = data.map(reading => reading.pressure);
-
-                            Plotly.newPlot('batteryChart', [{
-                                x: timestamps,
-                                y: batteryData,
-                                mode: 'lines',
-                                name: 'Battery Voltage',
-                                line: {color: 'rgb(255, 99, 132)'}
-                            }], { title: 'Battery Voltage Over Time', xaxis: { title: 'Time' }, yaxis: { title: 'Voltage (V)' } });
-
-                            Plotly.newPlot('solarChart', [{
-                                x: timestamps,
-                                y: solarData,
-                                mode: 'lines',
-                                name: 'Solar Power',
-                                line: {color: 'rgb(54, 162, 235)'}
-                            }], { title: 'Solar Power Over Time', xaxis: { title: 'Time' }, yaxis: { title: 'Power (W)' } });
-
-                            Plotly.newPlot('pressureChart', [{
-                                x: timestamps,
-                                y: pressureData,
-                                mode: 'lines',
-                                name: 'Pressure',
-                                line: {color: 'rgb(75, 192, 192)'}
-                            }], { title: 'Pressure Over Time', xaxis: { title: 'Time' }, yaxis: { title: 'Pressure (Pa)' } });
-                        })
-                        .catch(error => console.error('Error fetching data:', error));
-                }
+            
 
                 // Initialize plots for the default selected node
                 updatePlots(analyticsNodeSelect.value);
