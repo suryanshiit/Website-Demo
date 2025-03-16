@@ -304,7 +304,7 @@
                     const nodeId = chatbotNodeSelect.value;
                     const query = userQuery.value.trim();
 
-                    if (!nodeId || !query) {
+                    if (!query) {
                         alert("Please select a node and enter a query.");
                         return;
                     }
@@ -331,25 +331,6 @@
         <!-- JavaScript to handle tab switching, plot generation, and download functionality -->
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                const analyticsNodeSelect = document.getElementById("analyticsNodeSelect");
-                const fetchDataBtn = document.getElementById("fetchDataBtn");
-                const analyticsSelectedNode = document.getElementById("analyticsSelectedNode");
-
-                function updateSelectedNodeText() {
-                    analyticsSelectedNode.textContent = analyticsNodeSelect.value;
-                }
-
-                updateSelectedNodeText();
-
-                fetchDataBtn.addEventListener("click", () => {
-                    updateSelectedNodeText();
-                    updatePlots(analyticsNodeSelect.value);
-                });
-
-            
-
-                // Initialize plots for the default selected node
-                updatePlots(analyticsNodeSelect.value);
 
                 const openDownloadModalBtn = document.getElementById("openDownloadModalBtn");
                 const openLogDownloadModalBtn = document.getElementById("openLogDownloadModalBtn");
@@ -376,7 +357,7 @@
                     const endDate = document.getElementById("modalEndDate").textContent;
                     const downloadType = downloadTypeInput.value;
 
-                    if (!nodeId || !startDate || !endDate) {
+                    if (!startDate || !endDate) {
                         alert("Please select a node and date range.");
                         return;
                     }

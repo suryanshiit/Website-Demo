@@ -15,7 +15,7 @@ from datetime import datetime
 
 from datetime import datetime
 import pytz
-from flask import request, jsonify
+
 from pymongo import MongoClient
 import numpy as np
 from datetime import datetime
@@ -29,16 +29,16 @@ from django.http import HttpResponse
 import csv
 from datetime import datetime, timezone
 from django.conf import settings
+from django.http import JsonResponse
+import numpy as np
+import pytz
+from django.views.decorators.csrf import csrf_exempt
+mongo_uri = 'mongodb://admin:mybtp@3.109.19.112:27017/'
+from django.views.decorators.csrf import ensure_csrf_cookie
+
 
 def home(request):
     return render(request, "authentication/index.html")
-
-
-
-mongo_uri = 'mongodb://admin:mybtp@3.109.19.112:27017/'
-from django.http import JsonResponse
-
-from huggingface_hub import InferenceClient
 
 import numpy as np
 
@@ -383,35 +383,18 @@ def signup(request):
 
 def dashboard_view(request):
     if request.user.is_authenticated:
-        # client = MongoClient(mongo_uri)
-        # db = client['sensor_data']
-        # collection = db['readings']
-        
-        # # Get distinct nodes
-        # node_ids = collection.distinct("node_id")
+        client = MongoClient(mongo_uri)
+        db = client['sensor_data']
+        collection = db['readings']
 
-        # # Fetch sensor data
-        # readings = list(collection.find())
-        # data = [{
-        #     'node_id': reading.get('node_id'),
-        #     'battery_voltage': float(reading['battery_voltage']['$numberDouble']) if isinstance(reading['battery_voltage'], dict) else float(reading['battery_voltage']),
-        #     'solar': float(reading['solar']['$numberDouble']) if isinstance(reading['solar'], dict) else float(reading['solar']),
-        #     'pressure': float(reading['pressure']['$numberDouble']) if isinstance(reading['pressure'], dict) else float(reading['pressure']),
-        #     'timestamp': reading['timestamp'].isoformat() if isinstance(reading['timestamp'], datetime) else reading['timestamp']
-        # } for reading in readings]
-        
-        # client.close()
+        # Get unique node_ids
+        node_ids = sorted(collection.distinct('node_id'), key=lambda x: int(x.split('-')[-1]))
 
-        # latest_data = data[-1] if data else None
         return render(request, "authentication/dashboard.html", {
-            # 'data': json.dumps(data),  # Ensures data is always a JSON array
-            # 'latest_data': latest_data,
-            # 'node_ids': node_ids
+            'node_ids': node_ids
         })
-
     else:
-        return redirect('login')
-
+        return redirect('signin')
 
 
 def download_csv(request):
@@ -454,7 +437,7 @@ def download_csv(request):
 
     return response
 
-
+@csrf_exempt
 def signin(request):
     if request.method == 'POST':
         username = request.POST['username']
