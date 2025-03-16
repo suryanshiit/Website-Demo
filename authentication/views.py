@@ -82,11 +82,6 @@ def chatbot_query(request):
 
     # Connect to MongoDB and retrieve data for the specified node_id
     try:
-        node_id = int(node_id)
-    except ValueError:
-        return JsonResponse({"error": "Invalid node_id"}, status=400)
-
-    try:
         client = MongoClient(mongo_uri)
         db = client['sensor_data']
         collection = db['readings']
@@ -117,6 +112,7 @@ def chatbot_query(request):
         # Use Google Generative AI API to generate response
         response = model.generate_content(prompt)
         return JsonResponse({"response": response.text})
+    
     except Exception as e:
         return JsonResponse({"error": f"Internal server error: {str(e)}"}, status=500)
 
@@ -133,7 +129,7 @@ def fetch_logs(request):
     logs_collection = db['logs']
 
     # Fetch logs for the specified node_id
-    logs_cursor = logs_collection.find({'node_id': int(node_id)}).sort('timestamp', -1)
+    logs_cursor = logs_collection.find({'node_id': node_id}).sort('timestamp', -1)
     logs = []
     for log in logs_cursor:
         logs.append({
@@ -160,7 +156,7 @@ def log_download_data(request):
         return HttpResponse("Missing required parameters", status=400)
 
     try:
-        node_id = int(node_id)  # Convert node_id to int
+        node_id = node_id  # Convert node_id to int
         start_date = datetime.fromisoformat(start_date)
         end_date = datetime.fromisoformat(end_date)
     except ValueError:
@@ -220,7 +216,7 @@ def download_data(request):
         return HttpResponse("Missing required parameters", status=400)
 
     try:
-        node_id = int(node_id)  # Convert node_id to int if needed
+        node_id = node_id  # Convert node_id to int if needed
         start_date = datetime.fromisoformat(start_date)
         end_date = datetime.fromisoformat(end_date)
     except ValueError:
@@ -324,7 +320,7 @@ def get_data(request):
     collection = db['readings']
     
     # Fetch data for the specified node
-    readings = list(collection.find({'node_id': int(node_id)}))
+    readings = list(collection.find({'node_id': node_id}))
     
     data = [{
         'node_id': reading.get('node_id'),
@@ -429,7 +425,7 @@ def download_csv(request):
     collection = db['readings']
 
     # Query the data based on node_id and date range
-    query = {"node_id": int(node_id)}
+    query = {"node_id": node_id}
     if start_date and end_date:
         query['timestamp'] = {
             '$gte': datetime.strptime(start_date, "%Y-%m-%d"),
