@@ -238,7 +238,6 @@ def download_data(request):
     projection = {"_id": 0, "timestamp": 1, "battery_voltage": 1, "solar": 1, "pressure": 1}
     readings = collection.find(query, projection).sort("timestamp", 1)
 
-    # Format data
     data = [{
         'timestamp': reading['timestamp'].isoformat(),
         'node_id': reading.get('node_id'),
@@ -246,6 +245,15 @@ def download_data(request):
         'solar': float(reading['solar']['$numberDouble']) if isinstance(reading['solar'], dict) else float(reading['solar']),
         'pressure': float(reading['pressure']['$numberDouble']) if isinstance(reading['pressure'], dict) else float(reading['pressure']),
     } for reading in readings]
+
+    # Add new computed columns
+    for record in data:
+        # 1. Compute final_battery_voltage = battery_voltage * 0.000867
+        record['final_battery_voltage'] = record['battery_voltage'] * 0.000867
+        
+        # 2. Compute final_pressure using the given formula
+        y = record['pressure'] * (6.144 / 32768) * (1000 / 165)
+        record['final_pressure'] = ((y - 4) * 6) / 16
 
     # Close the MongoDB connection
     client.close()
@@ -256,19 +264,23 @@ def download_data(request):
 
     # Write data to CSV
     writer = csv.writer(response)
-    writer.writerow(["Timestamp", "Node ID", "Battery Voltage", "Solar Power", "Pressure"])
+    writer.writerow([
+        "Timestamp", "Node ID", "Battery Voltage", "Final Battery Voltage (V)", 
+        "Solar Power", "Pressure", "Final Pressure (B)"
+    ])
 
     for record in data:
         writer.writerow([
             convert_iso_to_ist(record["timestamp"]),
             node_id,
             record["battery_voltage"],
+            record["final_battery_voltage"],
             record["solar"],
-            record["pressure"]
+            record["pressure"],
+            record["final_pressure"]
         ])
 
     return response
-
 
 
 def signup(request):
